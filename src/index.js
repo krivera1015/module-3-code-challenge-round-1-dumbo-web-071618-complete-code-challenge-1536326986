@@ -18,13 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
       //getting listed comments
       pic.comments.forEach(comment => {
         //create li element
-        const li = document.createElement('li')
-        //create deletebutton
-        li.innerText = comment.content
-        const deletebutton = document.createElement('button')
-        deletebutton.innerText = 'x'
-        li.append(deletebutton)
-        commentUl.append(li)
+        let li = new Comment(comment)
+        commentUl.append(li.render())
       })
     })
 
@@ -48,18 +43,23 @@ document.addEventListener('DOMContentLoaded', function() {
   commentForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const commentInput = document.querySelector('#comment_input')
-        PicAdapter.updateComment({
-          image_id: 78,
-          content: commentInput.value
-        })
-        .then(comment => {
-          const li = document.createElement('li')
-          li.innerText = commentInput.value
-          const deletebutton = document.createElement('button')
-          deletebutton.innerText = 'x'
-          li.append(deletebutton)
-          commentUl.append(li)
-          commentInput.value = ""
-        })
+    let li = new Comment({
+      id: parseInt(commentUl.children[commentUl.children.length - 1].getAttribute('data-id')) +1,
+      content: commentInput.value
+    })
+    commentUl.append(li.render())
+    PicAdapter.updateComment({
+      image_id: 78,
+      content: commentInput.value
+    })
+  })
+
+  // make delete work
+  commentUl.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      let commentId = e.target.parentNode.getAttribute('data-id')
+      commentUl.removeChild(e.target.parentNode)
+      PicAdapter.deleteComment(commentId)
+    }
   })
 })

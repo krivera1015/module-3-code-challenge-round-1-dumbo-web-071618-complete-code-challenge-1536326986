@@ -27,12 +27,10 @@ class PicAdapter{
     })
     .then(res => res.json())
   }
-  static deleteComment(id, data){
+  static deleteComment(id){
     return fetch(`${commentsURL}/${id}`, {
-      method: "PATCH",
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
+      method: "DELETE",
+      headers: {'Content-Type': 'application/json'}
     })
-    .then(res => res.json())
   }
 }
